@@ -1,0 +1,21 @@
+smtpcheckaddresses.py
+
+Checks given email addresses on SMTP level.
+
+The intended use is to validate a MX email server configuration when it comes
+to email addresses / domains. E.g. during a migration just before going in
+production one might to check that all configured email address are accepted
+and not bouncing.
+
+smtpcheckaddresses.py accpepts a list of email addresses in a text file, one
+line per address. For each address it then opens a connection to a given host
+and checks the return code for the "RCPT TO" command. If the return code is in
+the range 200 to 299 the email address is assumed to be "OK".
+
+Additionally when given the -s option it sends a short test email to the
+addresses so you can check that mails are really delivered locally and not
+relayed. It is wise to provide also some email addresses which must fail.
+
+smtpcheckaddresses.py was hacked together in about one hour. So don't expect
+much error/exception handling. Needless to say that you use it at your own
+risk.
