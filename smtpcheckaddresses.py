@@ -31,8 +31,8 @@ VERSIONSTRING = "0.1"
 
 def buildTestMessage(email, str):
     '''Builds the raw text for the mail message including the email receipent and a unique string'''
-    t = "From: smtpcheckaddresses.py\n"
-    t += "To: " + email + "\n"
+    t = "From: <" + options.mailfrom + ">\n"
+    t += "To: <" + email + ">\n"
     # RFC822 date:
     t+= "Date: " + datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z") + "\n"
     t+= "User-Agent: smtpcheckaddresses.py\n"
@@ -49,6 +49,9 @@ parser = OptionParser(
 	version="%prog " + VERSIONSTRING + os.linesep +
 	"Copyright (C) 2009 Georg Lutz <georg AT NOSPAM georglutz DOT de")
 
+parser.add_option("", "--mailfrom",
+		  default="",
+		  dest="mailfrom", help="Sets the envelope from, default to an empty string")
 parser.add_option("-f", "--file",
 		  default="",
 		  dest="file", help="file with mail addresses" )
@@ -95,7 +98,7 @@ for address in addresses:
     rc = conn.docmd("HELO xyz.de")
     if rc[0] < 200 or rc[0] > 299:
 	print "Error: %s" % rc[1]
-    rc = conn.docmd("MAIL FROM: <>")
+    rc = conn.docmd("MAIL FROM: <" + options.mailfrom + ">")
     if rc[0] < 200 or rc[0] > 299:
 	print "Error: %s" % rc[1]
     cmd = "RCPT TO: <%s>" % address
